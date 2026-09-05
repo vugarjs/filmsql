@@ -362,3 +362,29 @@ SELECT Movies.Title , Movies.Rating, Genres.GenreName FROM Movies
 INNER JOIN MovieGenres ON MovieGenres.MovieID = Movies.ID
 INNER JOIN Genres ON MovieGenres.GenreID = Genres.ID
 WHERE Genres.GenreName = 'Action' AND Movies.Rating > 8
+
+--Çoxlu JOIN: Müştərinin adı, aldığı biletin qiyməti,
+--filmin adı və biletin aid olduğu zalın adını eyni sorğuda göstərin
+--(Müştərilər + Biletlər + Seanslar + Filmlər + Zallar).
+SELECT Customers.FirstName ,Tickets.SeatNumber ,Tickets.PRICE , Halls.HallName , Movies.Title FROM Customers
+LEFT JOIN Tickets ON Tickets.CustomerID = Customers.ID
+INNER JOIN [Sessions] ON [Sessions].ID = Tickets.SessionID
+LEFT JOIN Movies ON Movies.ID = [Sessions].MovieID
+INNER JOIN Halls ON [Sessions].HallId = Halls.ID
+
+--Aksiyon" janrındakı filmlərə satılmış biletlərin ümumi məbləğini (SUM) hesablayın.
+SELECT SUM(Tickets.Price) AS TotalAmount FROM Movies
+INNER JOIN MovieGenres ON Movies.ID = MovieGenres.MovieID
+INNER JOIN Genres ON MovieGenres.GenreID = Genres.ID
+INNER JOIN [Sessions] ON Movies.ID = [Sessions].MovieID
+INNER JOIN Tickets ON [Sessions].ID = Tickets.SessionID
+WHERE Genres.GenreName = 'Action';
+
+--FULL  JOIN istifadə edərək 
+--bütün zalları və bütün seansları eşləşdirin (uyğunlaşmayanlar da daxil olmaqla).
+SELECT Halls.HallName , Sessions.Status FROM Halls
+FULL JOIN [Sessions] ON Sessions.HallId = Halls.ID
+
+-- JOIN istifadə edərək bütün zallar 
+--ilə bütün seanslar arasında mümkün olan bütün kombinasiyaları generasiya edin.
+
