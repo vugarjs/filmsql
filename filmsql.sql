@@ -309,3 +309,56 @@ INNER JOIN MovieGenres
 ON Movies.ID = MovieGenres.MovieID
 INNER JOIN Genres 
 ON MovieGenres.GenreID = Genres.ID;
+
+--Filmlər, FilmAktyorları və Aktyorlar cədvəllərini birləşdirərək "Inception" filmində çəkilən bütün aktyorların siyahısını çıxarın.
+
+SELECT Movies.Title , Actors.FistName
+FROM Movies
+LEFT JOIN MovieActors
+ON Movies.ID = MovieActors.MovieID
+LEFT JOIN Actors
+ON Actors.ID = MovieActors.ActorID
+WHERE Movies.Title = 'Inception'
+
+--"Komediya" janrında olan bütün filmlərin adlarını və reytinqlərini siyahılayın.
+SELECT Movies.Title, Movies.Rating
+FROM Movies
+LEFT JOIN MovieGenres
+ON MovieGenres.MovieID = Movies.ID
+
+LEFT JOIN Genres
+ON MovieGenres.GenreID = Genres.ID
+
+WHERE Genres.GenreName = 'Comedy';
+
+--"Bred Pitt" adlı aktyorun çəkildiyi bütün filmlərin adını və buraxılış ilini çıxarın.
+SELECT	 Movies.Title , Movies.ReleaseYear, Actors.FistName
+FROM Movies
+INNER JOIN MovieActors
+ON MovieActors.MovieID = Movies.ID
+INNER JOIN Actors
+ON Actors.ID = MovieActors.ActorID
+
+--Həm "Dram", həm də "Aksiyon" janrında olan filmləri tapmaq üçün uyğun JOIN sorğusu yazın
+SELECT Movies.Title, Genres.GenreName
+FROM Movies
+INNER JOIN MovieGenres ON MovieGenres.MovieID = Movies.ID
+INNER JOIN Genres ON MovieGenres.GenreID = Genres.ID
+WHERE Genres.GenreName = 'Action' OR Genres.GenreName = 'Drama'
+
+--Hələ heç bir janr mənsubiyyəti təyin olunmamış filmləri çıxarın.
+SELECT Movies.Title ,Genres.GenreName FROM Movies
+LEFT JOIN MovieGenres ON MovieGenres.MovieID = Movies.ID
+LEFT JOIN Genres ON MovieGenres.GenreID = Genres.ID
+WHERE MovieGenres.GenreID IS NULL
+
+--Hələ heç bir filmə çəkilməmiş aktyorların siyahısını LEFT JOIN vasitəsilə tapın.
+SELECT Actors.FistName , Actors.LastName FROM Actors
+LEFT JOIN MovieActors ON Actors.ID = MovieActors.ActorID
+WHERE MovieActors.ActorID IS NULL
+
+--"Aksiyon" janrında olan və reytinqi 8.0-dən yüksək olan filmlərin siyahısını çıxarın.
+SELECT Movies.Title , Movies.Rating, Genres.GenreName FROM Movies
+INNER JOIN MovieGenres ON MovieGenres.MovieID = Movies.ID
+INNER JOIN Genres ON MovieGenres.GenreID = Genres.ID
+WHERE Genres.GenreName = 'Action' AND Movies.Rating > 8
